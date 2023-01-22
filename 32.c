@@ -22,7 +22,7 @@ void parVecMult(int *a, int *b, int *c, int len) {
 
 void forVecMult(int *a, int *b, int *c, int len) {
   int i;
-#pragma omp for private(i) schedule(static) nowait
+#pragma omp parallel for private(i) schedule(static)
   for (i = 0; i < len; i++) {
     c[i] = a[i] * b[i];
   }
