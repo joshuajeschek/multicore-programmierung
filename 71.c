@@ -1,50 +1,66 @@
 #include <pthread.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <omp.h>
 
-/* #define INTERVALS 1000000000 */
-#define INTERVALS 1000
+#define INTERVALS 1000000000
+#define THREADS 100
 
 typedef struct _pi_payload_t {
-  int j;
+  int start, end;
   double delta;
   double *pi;
-  pthread_mutex_t *m;
+  /* pthread_mutex_t *m; */
 } pi_payload_t;
 
-void *calcPi(void *arg) {
-  pi_payload_t *payload = (pi_payload_t*) arg;
-  double x = ((double)payload->j - 0.5) * payload->delta;
-
-  pthread_mutex_lock(payload->m);
-  {
+void *calcPiThread(void *arg) {
+  pi_payload_t *payload = (pi_payload_t *)arg;
+  for (int j = payload->start; j <= payload->end; j++) {
+    double x = ((double)j - 0.5) * payload->delta;
+    /* pthread_mutex_lock(payload->m); */
+    /* { */
     *payload->pi += 4.0 / (1.0 + (x * x));
+    /* } */
+    /* pthread_mutex_unlock(payload->m); */
   }
-  pthread_mutex_unlock(payload->m);
   return NULL;
 }
 
-int main() {
-  int intervals = INTERVALS;
+double calcPi(int threads, int intervals) {
   double pi = 0.0;
+  double pis[threads];
   double delta = 1.0 / (double)intervals;
-  pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+  /* pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER; */
 
-
-  pthread_t thread[INTERVALS];
-  for (int j = 0; j <= intervals; j++) {
-    pi_payload_t *payload = (pi_payload_t*) malloc(sizeof(pi_payload_t));
-    payload->j = j;
+  pthread_t thread[threads];
+  int increment = intervals / threads;
+  for (int j = 0; j < threads; j++) {
+    pi_payload_t *payload = (pi_payload_t *)malloc(sizeof(pi_payload_t));
+    payload->start = j * increment;
+    int end = (j + 1) * increment;
+    payload->end = (end < intervals) ? end : intervals;
     payload->delta = delta;
-    payload->pi = &pi;
-    payload->m = &m;
-    pthread_create(&thread[j], NULL, calcPi, payload);
+    pis[j] = 0;
+    payload->pi = &pis[j];
+    /* payload->m = &m; */
+    pthread_create(&thread[j], NULL, calcPiThread, payload);
   }
 
-  for (int j = 0; j <= intervals; j++)
+  for (int j = 0; j < threads; j++) {
     pthread_join(thread[j], NULL);
+    pi += pis[j];
+  }
 
-  pi /= intervals;
+  return pi / intervals;
+}
 
-  printf("pi: %.10f", pi);
+int main() {
+
+  for (int threads = 1; threads <= THREADS; threads++) {
+    double start = omp_get_wtime();
+    double pi = calcPi(threads, INTERVALS);
+    double end = omp_get_wtime();
+    printf("%d threads: pi=%.10f (%.10fs)\n", threads, pi, end-start);
+  }
 }
