@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{minted}
+
+\begin{document}
+
+{\LARGE\textbf{Übung 5}}
+
+\section{konkrete Schleifentransformation}
+\begin{minted}[escapeinside=||]{c}
+  for(i=1; i|$\leq$|2; i++)
+    for(j=1; j|$\leq$|3; j++)
+      for(k=1; k|$\leq$|2; k++)
+        for(h=1; h|$\leq$|3; h++)
+          A[i][j][k][h] = fun(i,j,k,h);
+\end{minted}
+
+\subsection{Verschmolzene Schleife}
+\begin{minted}[escapeinside=||]{c}
+  for (l=1;l|$\leq$|36;l++)
+    i = |$\left\lceil{}\frac{l}{18}\right\rceil{} - 2 \left\lfloor{}\frac{l-1}{36}\right\rfloor{}$|
+    j = |$\left\lceil{}\frac{l}{6}\right\rceil{} - 3 \left\lfloor{}\frac{l-1}{18}\right\rfloor{}$|
+    k = |$\left\lceil{}\frac{l}{3}\right\rceil{} - 2 \left\lfloor{}\frac{l-1}{6}\right\rfloor{}$|
+    h = |$l-3\left\lfloor{}\frac{l-1}{3}\right\rfloor{}$|
+    A[i][j][k][h] = fun(i,j,k,h);
+\end{minted}
+
+\subsection{Prozessorzugriff}
+\begin{itemize}
+  \item $P=3$
+  \item $N=36$
+  \item jeder Prozessor übernimmt $r=\left\lceil{}\frac{36}{3}\right\rceil{} = 12$ Iterationen
+\end{itemize}
+\begin{align}
+  p=1: A[1][1\dots2][1\dots2][1\dots3] \\
+  p=2: A[1\dots2][3\dots1][1\dots2][1\dots3] \\
+  p=3: A[2][2\dots3][1\dots2][1\dots3] \\
+\end{align}
+
+\end{document}

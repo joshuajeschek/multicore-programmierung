@@ -1,5 +1,11 @@
-GCC = gcc -fopenmp -Wall -Wextra
-EXTRA_FILES = util.c
+GCC          = gcc -fopenmp -Wall -Wextra
+EXTRA_FILES  = util.c
+
+LATEX        = lualatex -shell-escape
+BIB          = bibtex
+
+SHELL        = /bin/bash # fix for not running clean
+TMPFILES     = *.{log,aux,toc,out,lof,lot,snm,nav,vrb,bak,bbl,blg,ent}
 
 %: %.c
 	$(GCC) $< $(EXTRA_FILES) -o $*.out
@@ -8,5 +14,13 @@ EXTRA_FILES = util.c
 	make $*
 	./$*.out
 
+%: %.tex
+	$(LATEX) $<
+	$(LATEX) $<
+
+%: %.py
+	python $<
+
 clean:
-	rm *.out
+	rm -f $(TMPFILES)
+
