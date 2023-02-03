@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{array}
+\newcolumntype{L}{>{$}l<{$}}
+
+\begin{document}
+\section{Scheduling Methoden}
+\begin{itemize}
+  \item Self-Scheduling: Dynamic Scheduling
+  \item Chunk-Scheduling: Guided Scheduling
+  \item Guided-Self-Scheduling: Guided Scheduling
+\end{itemize}
+
+\section{Schleifenscheduling}
+\[ N = 200;~~~~p = 4 \]
+\subsection{Statisches Schleifen-Scheduling}
+\[ \{50, 50, 50, 50\} \]
+
+\begin{tabular}{L | L | L | L}
+  P_0 & P_2 & P_3 & P_4 \\
+  50  & 50  & 50  & 50
+\end{tabular}
+
+
+\subsection{Chunk-Scheduling}
+\[ \text{Blockgröße } k=20 \]
+\[ \{20, 20, 20, 20, 20, 20, 20, 20, 20, 20\} \]
+
+\begin{tabular}{L | L | L | L}
+  P_0 & P_1 & P_2 & P_3 \\
+  20  & 20  & 20  & 20  \\
+  20  & 20  & 20  & 20  \\
+  20  & 20  &     &     \\
+\end{tabular}
+
+\subsection{Guided Self Scheduling}
+\[ k = 1 \text{ (GSS(1))} \]
+\[ \{ 50, 38, 28, 21, 6, 4, 1, 1, 1, 1 \}\]
+\begin{tabular}{L | L | L | L}
+  P_0   & P_1   & P_2   & P_3   \\
+  50_0  & 38_1  & 28_2  & 21_3  \\
+        &       & 1_6   & 6_4   \\
+        &       & 1_7   & 4_5   \\
+        &       & 1_8   & 1_9   \\
+\end{tabular}
+\end{document}
