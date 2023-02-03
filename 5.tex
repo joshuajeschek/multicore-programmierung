@@ -36,4 +36,24 @@
   p=3: A[2][2\dots3][1\dots2][1\dots3] \\
 \end{align}
 
+\newpage
+\section{Gemischter Schleifenkomplex}
+\begin{minted}{c}
+  for(i=0; i<N4; i++) // parallel
+    for(j=0; j<N3; j++)
+      for(k=0; k<N2; k++) // parallel
+        for(h=0; h<N1; h++)
+          A[i][j][k][h] = A[i][j+1][k][h+1]
+\end{minted}
+transformiert:
+\begin{minted}[escapeinside=||]{c}
+  for(l=1; l|$\leq$|N4*N2+1; l++)
+    for(j=0; j<N3; j++)
+      for(h=0; h<N1; h++)
+        i = |$\left\lceil\frac{l}{N2}\right\rceil - N4 \left\lfloor\frac{l-1}{N2\times{}N4}\right\rfloor - 1$|
+        k = |$l-N2 \left\lfloor\frac{l-1}{N2}\right\rfloor - 1$|
+        A[i][j][k][h] = A[i][j+1][k][h+1]
+\end{minted}
+
+
 \end{document}

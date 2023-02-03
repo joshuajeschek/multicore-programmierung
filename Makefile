@@ -23,4 +23,4 @@ TMPFILES     = *.{log,aux,toc,out,lof,lot,snm,nav,vrb,bak,bbl,blg,ent}
 
 clean:
 	rm -f $(TMPFILES)
-
+	rm -r _minted*

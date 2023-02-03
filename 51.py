@@ -6,7 +6,6 @@ for i in range(1, 2+1):
     for k in range(1, 2+1):
       for h in range(1, 3+1):
         original.append((i, j, k, h))
-print(len(original))
 merged = []
 for l in range(1, 36+1):
   i = ceil(l/18) - 2 * floor((l-1)/36)
