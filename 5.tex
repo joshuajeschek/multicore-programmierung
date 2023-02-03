@@ -47,9 +47,9 @@
 \end{minted}
 transformiert:
 \begin{minted}[escapeinside=||]{c}
-  for(l=1; l|$\leq$|N4*N2+1; l++)
-    for(j=0; j<N3; j++)
-      for(h=0; h<N1; h++)
+  for(j=0; j<N3; j++)
+    for(h=0; h<N1; h++)
+      forall(l=1; l|$\leq$|N4*N2+1; l++)
         i = |$\left\lceil\frac{l}{N2}\right\rceil - N4 \left\lfloor\frac{l-1}{N2\times{}N4}\right\rfloor - 1$|
         k = |$l-N2 \left\lfloor\frac{l-1}{N2}\right\rfloor - 1$|
         A[i][j][k][h] = A[i][j+1][k][h+1]
